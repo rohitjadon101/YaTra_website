@@ -16,14 +16,14 @@ function Header() {
                     <img src={IMG} alt="Logo" className="w-full h-full object-cover" />
                 </div>
                 <div>
-                    <h1 className="sm:text-3xl font-bold text-gray-300 tracking-wider">YaTra</h1>
-                    <p className="text-gray-400">Enjoy Vacations</p>
+                    <h1 className="sm:text-3xl text-lg font-bold text-gray-300 tracking-wider">YaTra</h1>
+                    <p className="text-xs sm:text-base text-gray-400">Enjoy Vacations</p>
                 </div>
             </div>
 
             {/* Navigation Links */}
             <nav className="flex items-center sm:gap-6 gap-2">
-                <a href="/" className="text-gray-300 sm:text-base text-sm hover:text-blue-400 transition duration-300">Home</a>
+                <a href="/" className="text-gray-300 sm:text-base text-xs hover:text-blue-400 transition duration-300">Home</a>
                 {user ? (
                     <div className="flex items-center sm:gap-4 gap-2">
                         <a href="/profile" className="relative flex items-center group">
@@ -37,8 +37,8 @@ function Header() {
                     </div>
                 ) : (
                     <div className="flex sm:gap-4 gap-2">
-                        <a href="/login" className="sm:px-4 py-1 px-2 sm:text-base text-sm bg-zinc-500 hover:bg-zinc-600 rounded-lg text-white font-medium shadow transition duration-300">Login</a>
-                        <a href="/register" className="sm:px-4 py-1 px-2 sm:text-base text-sm bg-zinc-500 hover:bg-zinc-600 rounded-lg text-white font-medium shadow transition duration-300">Register</a>
+                        <a href="/login" className="sm:px-4 py-1 px-2 sm:text-base text-xs bg-zinc-500 hover:bg-zinc-600 rounded-lg text-white font-medium shadow transition duration-300">Login</a>
+                        <a href="/register" className="sm:px-4 py-1 px-2 sm:text-base text-xs bg-zinc-500 hover:bg-zinc-600 rounded-lg text-white font-medium shadow transition duration-300">Register</a>
                     </div>
                 )}
             </nav>
