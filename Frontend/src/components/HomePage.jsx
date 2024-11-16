@@ -98,7 +98,7 @@ function HomePage() {
                 <section className="w-full sm:py-20 py-10 bg-gradient-to-r from-gray-200 to-gray-100">
                     <h1 className="text-4xl font-bold text-center text-gray-800">Most Liked Places</h1>
                     <p className="text-gray-500 text-center mt-4 max-w-2xl mx-auto">
-                        Explore some of the best places to visit in India, handpicked for you.
+                        Explore Top-rated destinations loved by users.
                     </p>
                     {likedPlaces.length > 0 ? (
                         <>
@@ -109,7 +109,7 @@ function HomePage() {
                                         <img src={lp.img1} className="w-full h-28 sm:h-48 object-cover"/>
                                         <div className="p-2 sm:p-4">
                                             <h3 className="sm:text-lg font-semibold text-gray-800">{lp.title1}</h3>
-                                            <p className="text-gray-600 text-xs sm:text-base sm:mt-1">{lp.title2}</p>
+                                            <p className="text-gray-600 text-xs sm:text-base">{lp.title2}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -127,7 +127,7 @@ function HomePage() {
                 <section className="w-full py-10 sm:py-20 bg-gray-100">
                     <h2 className="text-4xl font-bold text-gray-800 text-center">Search By Category</h2>
                     <p className="text-gray-500 text-center max-w-2xl mx-auto mt-4">
-                        Explore some of the best places to visit in India, handpicked for you.
+                        Explore places based on specific interests.
                     </p>
                     {categories.length > 0 ? (
                         <div className="py-10 flex justify-center items-center">
@@ -144,7 +144,7 @@ function HomePage() {
                                         <img src={c.img1} alt={c.title1} className="w-full h-28 sm:h-48 object-cover"/>
                                         <div className="p-2 sm:p-4">
                                             <h3 className="sm:text-lg font-semibold text-gray-800">{c.title1}</h3>
-                                            <p className="text-gray-600 text-xs sm:text-base sm:mt-1">{c.description}</p>
+                                            <p className="text-gray-600 text-xs sm:text-base">{c.description}</p>
                                         </div>
                                     </div>
                                 ))}
