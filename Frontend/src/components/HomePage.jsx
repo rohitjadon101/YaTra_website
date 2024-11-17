@@ -108,8 +108,8 @@ function HomePage() {
                                     <div key={lp._id} className="w-36 h-48 sm:w-60 sm:h-80 bg-white rounded-lg shadow-lg overflow-hidden">
                                         <img src={lp.img1} className="w-full h-28 sm:h-48 object-cover"/>
                                         <div className="p-2 sm:p-4">
-                                            <h3 className="sm:text-lg font-semibold text-gray-800 leading-snug">{lp.title1}</h3>
-                                            <p className="text-gray-600 text-xs sm:text-base leading-snug">{lp.title2}</p>
+                                            <h3 className="sm:text-lg font-semibold text-gray-800">{lp.title1}</h3>
+                                            <p className="text-gray-600 text-xs sm:text-base sm:mt-2">{lp.title2}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -143,8 +143,8 @@ function HomePage() {
                                     >
                                         <img src={c.img1} alt={c.title1} className="w-full h-28 sm:h-48 object-cover"/>
                                         <div className="p-2 sm:p-4">
-                                            <h3 className="sm:text-lg font-semibold text-gray-800 leading-snug">{c.title1}</h3>
-                                            <p className="text-gray-600 text-xs sm:text-base leading-snug">{c.description}</p>
+                                            <h3 className="sm:text-lg font-semibold text-gray-800">{c.title1}</h3>
+                                            <p className="text-gray-600 text-xs sm:text-base sm:mt-2">{c.description}</p>
                                         </div>
                                     </div>
                                 ))}
