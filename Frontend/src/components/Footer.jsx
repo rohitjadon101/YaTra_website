@@ -11,23 +11,23 @@ function Footer() {
           <div>
             <h1 className="sm:text-2xl text-lg text-white font-serif mb-2">Join us</h1>
             <ul className="flex flex-col gap-4 cursor-pointer">
-              <li className="flex justify-center items-center gap-2 hover:text-zinc-300">LinkedIn<FaLinkedin /></li>
-              <li className="flex justify-center items-center gap-2 hover:text-zinc-300">Github<FaGithub /></li>
-              <li className="flex justify-center items-center gap-2 hover:text-zinc-300">Instagram<AiOutlineInstagram /></li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">LinkedIn<FaLinkedin /></a></li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Github<FaGithub /></a></li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Instagram<AiOutlineInstagram /></a></li>
             </ul>
           </div>
           <div>
             <h1 className="sm:text-2xl text-lg text-white font-serif mb-2">Contact us</h1>
             <ul className="flex flex-col gap-4 cursor-pointer">
-              <li className="flex justify-center items-center gap-2 hover:text-zinc-300">Twitter<FaSquareXTwitter /></li>
-              <li className="flex justify-center items-center gap-2 hover:text-zinc-300">Gmail<AiFillMail/></li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Twitter<FaSquareXTwitter /></a></li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Gmail<AiFillMail /></a></li>
             </ul>
           </div>
           <div>
             <h1 className="sm:text-2xl text-lg text-white font-serif mb-2">About us</h1>
             <ul className="flex flex-col gap-2 cursor-pointer">
-              <li className="hover:text-zinc-300">About us</li>
-              <li className="hover:text-zinc-300">Feedback</li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">About us</a></li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Feedback</a></li>
             </ul>
           </div>
         </div>
