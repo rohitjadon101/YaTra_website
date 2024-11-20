@@ -11,16 +11,16 @@ function Footer() {
           <div>
             <h1 className="sm:text-2xl text-lg text-white font-serif mb-2">Join us</h1>
             <ul className="flex flex-col gap-4 cursor-pointer">
-              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">LinkedIn<FaLinkedin /></a></li>
+              <li><a href="https://www.linkedin.com/in/rohit-jadon-60a45429a/" className="flex justify-center items-center gap-2 hover:text-zinc-300">LinkedIn<FaLinkedin /></a></li>
               <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Github<FaGithub /></a></li>
-              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Instagram<AiOutlineInstagram /></a></li>
             </ul>
           </div>
           <div>
             <h1 className="sm:text-2xl text-lg text-white font-serif mb-2">Contact us</h1>
             <ul className="flex flex-col gap-4 cursor-pointer">
-              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Twitter<FaSquareXTwitter /></a></li>
               <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Gmail<AiFillMail /></a></li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Twitter<FaSquareXTwitter /></a></li>
+              <li><a href="https://github.com/rohitjadon101/" className="flex justify-center items-center gap-2 hover:text-zinc-300">Instagram<AiOutlineInstagram /></a></li>
             </ul>
           </div>
           <div>

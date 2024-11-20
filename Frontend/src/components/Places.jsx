@@ -175,14 +175,14 @@ function Places() {
                                 <ul className="flex gap-6 mt-6">
                                     <li onClick={() => handleLike(p._id)} className="cursor-pointer">
                                         <SlLike className="lg:text-xl" />
-                                        <p>{p.likes.length}</p>
+                                        <p>{p.likes?.length || 0}</p>
                                     </li>
                                     <li onClick={() => handleSave(p._id)} className="cursor-pointer">
                                         <SlBag className="lg:text-xl" />
                                     </li>
                                     <li onClick={() => handleComment(p._id)} className="cursor-pointer">
                                         <SlBubble className="lg:text-xl" />
-                                        <p>{p.comments.length}</p>
+                                        <p>{p.comments?.length || 0}</p>
                                     </li>
                                 </ul>
 
@@ -192,8 +192,8 @@ function Places() {
                                         <SlClose onClick={() => setCommentOpen(null)} className="text-xl cursor-pointer" />
                                     </div>
                                     <div className="overflow-y-auto h-4/5 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
-                                        {[...p.comments].reverse().map((c, idx) => (
-                                            <div key={idx} className="bg-gray-800 overflow-hidden px-3 py-2 rounded mb-3 text-white">
+                                        {[...p.comments].reverse().map((c) => (
+                                            <div key={c._id} className="bg-gray-800 overflow-hidden px-3 py-2 rounded mb-3 text-white">
                                                 <img src={c.profileImage} className="w-5 h-5 rounded-full object-cover inline mb-1"/>
                                                 <p className="text-sm font-bold ml-1 inline">{c.username}</p>
                                                 <p className="text-sm break-words">{c.comment}</p>

@@ -80,6 +80,7 @@ function ProfilePage(){
                             <p className="text-center text-zinc-500 mb-4">Welcome back to your Admin Dashboard!</p>
                             <div className="flex justify-center gap-4 mt-4">
                                 <a href="/" className="text-blue-600 hover:text-blue-800 hover:scale-105">Home</a>
+                                <a href="/editProfile" className="text-gray-600 hover:text-gray-800 hover:scale-105">Edit</a>
                                 <button onClick={handleLogout} className="text-red-500 hover:text-red-600 hover:scale-105">Logout</button>
                             </div>
                             <div className="flex justify-center gap-4 mt-6">

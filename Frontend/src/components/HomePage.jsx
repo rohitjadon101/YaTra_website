@@ -45,7 +45,7 @@ function HomePage() {
             .then((res) => res.json())
             .then((data) => setCategories(data))
             .catch((error) => console.error("Error fetching data:", error));
-    }, []);
+    }, [categories]);
 
     const [likedPlaces, setLikedPlaces] = useState([]);
     useEffect(() => {
@@ -53,7 +53,7 @@ function HomePage() {
         .then((res) => res.json())
         .then((data) => setLikedPlaces(data))
         .catch((err) => console.error('Error fetching liked Places : ',err));
-    })
+    }, [likedPlaces]);
 
     return (
         <>
@@ -106,7 +106,7 @@ function HomePage() {
                             <div className="sm:px-4 grid lg:grid-cols-4 grid-cols-2 gap-y-4 gap-x-4 sm:gap-x-6">
                                 {likedPlaces.map((lp) => (
                                     <div key={lp._id} className="w-36 h-48 sm:w-60 sm:h-80 bg-white rounded-lg shadow-lg overflow-hidden">
-                                        <img src={lp.img1} className="w-full h-28 sm:h-48 object-cover"/>
+                                        <img src={lp.img1} className="w-full h-24 sm:h-44 object-cover"/>
                                         <div className="p-2 sm:p-4">
                                             <h3 className="sm:text-lg font-semibold text-gray-800">{lp.title1}</h3>
                                             <p className="text-gray-600 text-xs sm:text-base">{lp.title2}</p>
@@ -117,7 +117,7 @@ function HomePage() {
                         </div>
                         <div className="mt-4 flex flex-col gap-4 justify-center items-center">
                             <h4 className="text-gray-500">Explore Top 10 Liked Places</h4>
-                            <a href="/mostlikedPlaces" className="px-8 py-2 text-xl font-semibold rounded-full bg-blue-600 hover:bg-blue-700">Explore ---</a>
+                            <a href="/mostlikedPlaces" className="px-8 py-2 text-xl font-semibold rounded-full bg-blue-600 hover:bg-blue-700">Explore</a>
                         </div>
                         </>
                     ) : (<div className="text-lg font-bold text-gray-600 text-center mt-4">No liked Places Found</div>)}
@@ -141,7 +141,7 @@ function HomePage() {
                                         }}
                                         className="w-36 h-48 sm:w-60 sm:h-80 bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:scale-105 transform transition duration-300"
                                     >
-                                        <img src={c.img1} alt={c.title1} className="w-full h-28 sm:h-48 object-cover"/>
+                                        <img src={c.img1} alt={c.title1} className="w-full h-24 sm:h-44 object-cover"/>
                                         <div className="p-2 sm:p-4">
                                             <h3 className="sm:text-lg font-semibold text-gray-800">{c.title1}</h3>
                                             <p className="text-gray-600 text-xs sm:text-base">{c.description}</p>

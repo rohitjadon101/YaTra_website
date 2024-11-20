@@ -9,6 +9,7 @@ import AddCategory from "./components/AddCategory";
 import ProfilePage from "./components/ProfilePage";
 import MostLikedPlaces from "./components/MostLikedPlaces";
 import Places from "./components/Places";
+import EditProfile from "./components/EditProfile";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/addCategory" element={<AddCategory/>}/>
         <Route path="/place" element={<Places/>}/>
         <Route path="/mostlikedplaces" element={<MostLikedPlaces/>}/>
+        <Route path="/editProfile" element={<EditProfile/>}/>
       </Routes>
     </Router>
   )
