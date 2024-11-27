@@ -23,7 +23,7 @@ function SearchedPlace() {
     const user = cookies.get('user') || null;
 
     // This is for fetching the searched place from backend
-    const [place, setPlace] = useState('');
+    const [place, setPlace] = useState(null);
     const [placeName, setPlaceName] = useState(cookies.get('searchedPlace'));
 
     useEffect(() => {
@@ -189,8 +189,10 @@ function SearchedPlace() {
                                     <option value="placeaddress" >place address</option>
                                 </select>
                             </div>
-                            <input type="text" value={value} onChange={handleSelect} className="mt-2 border-2 rounded-l-full border-gray-400 bg-transparent outline-none px-2 py-1 text-sm" placeholder="search place..."/>
-                            <button onClick={() => onSearch(value)} className="px-2 py-1 bg-blue-500 rounded-r-full">Search</button>
+                            <div className="inline-block">
+                                <input type="text" value={value} onChange={handleSelect} className="mt-2 border-2 rounded-l-full border-gray-400 bg-transparent outline-none px-2 py-1 text-sm" placeholder="search place..."/>
+                                <button onClick={() => onSearch(value)} className="px-2 py-1 bg-blue-500 rounded-r-full">Search</button>
+                            </div>
                         </div>
                         <div className={`absolute top-full flex flex-col gap-2 w-full p-4 mt-2 border-2 rounded-md border-gray-400 bg-zinc-700 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 ${value ? "opacity-100 h-60" : "opacity-0 h-0"}`}>
                             {allPlaces.length > 0 ? (
