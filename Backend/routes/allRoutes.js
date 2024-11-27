@@ -7,8 +7,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const dotenv = require("dotenv");
-// const multer = require('multer');
-// const upload = multer({dest: "uploads/"});
 
 dotenv.config();
 
@@ -56,6 +54,29 @@ router.get('/:category', async (req,res) => {
         res.status(500).json({message: 'Server error. Please try again later.'});
     }
 });
+
+// Get Searched place
+router.get('/searchedPlace/:placeName', async (req,res) => {
+    try {
+        const pl = await place.findOne({title1: req.params.placeName});
+        if (!pl) return res.status(404).json({ message: 'No place found'});
+        res.status(200).json(pl); 
+    } catch (error) {
+        res.status(500).json({message: 'Server error. Please try again later.'});
+    }
+});
+
+// Get all the places for Searching functionality
+router.get('/allPlaces/all', async (req,res) => {
+    try {
+        const allPlaces = await place.find();
+        if (!allPlaces.length) return res.status(404).json({ message: 'No places found'});
+        res.status(200).json(allPlaces);
+    } catch (error) {
+        console.error("Server error : ", error);
+        res.status(500).json({message: "Server error :"});
+    }
+})
 
 // User Registration
 router.post('/register', async (req, res) => {
@@ -105,34 +126,6 @@ router.post('/login', async (req, res) => {
         res.json({message: error.message});
     }
 })
-
-// Edit Profile
-// router.post('/editProfile', auth, upload.single("profilePhoto"), async (req, res) => {
-//     const {name, username, email} = req.body;
-    
-//     try {
-//         const updateFields = {
-//             name: name,
-//             username: username,
-//             email: email,
-//         };
-
-//         if (req.file) {
-//             updateFields.profileImage = req.file.filename;
-//         }
-
-//         const foundUser = await user.findOneAndUpdate(
-//             { _id: req.user.id },
-//             { $set: updateFields },
-//             { returnDocument: "after" }
-//         );
-
-//         res.status(200).json(foundUser);
-//     } catch (error) {
-//         console.error('ERR : ', error);
-//         res.status(500).json({message: "Network Error"});
-//     }
-// })
 
 // Add new category
 router.post('/addCategory', auth, async (req, res) => {

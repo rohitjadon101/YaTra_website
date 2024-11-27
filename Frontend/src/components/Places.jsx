@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SlBubble, SlLike, SlBag, SlClose } from "react-icons/sl";
-import Header1 from "./Header";
+import Header from "./Header";
 
 const cookies = new Cookies();
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -23,11 +23,11 @@ function Places() {
     const category = cookies.get('category');
     const user = cookies.get('user') || null;
 
+    // Find Distance Functionality
     const toggleDropdown = (placeID) => {
         setDropdown(dropdown === placeID ? null : placeID);
         setResult(null);
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -50,6 +50,7 @@ function Places() {
         }
     };
 
+    // To fetch all the places of same category
     useEffect(() => {
         if (category) {
             fetch(`${backendUrl}/api/places/${category}`)
@@ -59,6 +60,7 @@ function Places() {
         }
     }, [category]);
 
+    // Like Functionality
     const handleLike = async (placeID) => {
         if (user) {
             try {
@@ -84,6 +86,7 @@ function Places() {
         }
     };
 
+    // save Functionality
     const handleSave = async (placeID) => {
         if (user) {
             try {
@@ -109,6 +112,7 @@ function Places() {
         }
     };
 
+    // comment Functionality
     const handleComment = (placeID) => {
         if (user) {
             setCommentOpen(commentOpen === placeID ? null : placeID);
@@ -116,11 +120,9 @@ function Places() {
             toast.info("Please log in to comment", { autoClose: 1500, position: 'bottom-right', theme: 'colored' });
         }
     };
-
     const handleChange = (e) => {
         setCommentData({ ...commentData, [e.target.name]: e.target.value });
     };
-
     const postComment = async (placeID) => {
         try {
             const response = await fetch(`${backendUrl}/api/places/${placeID}/comment`, {
@@ -143,24 +145,38 @@ function Places() {
         }
     };
 
+    // Hiding the description of the place
+    const [showContent, setShowContent] = useState(false);
+    const [buttonValue, setButtonValue] = useState("Read More");
+    const handleHiding = () => {
+        setShowContent(!showContent);
+        showContent === true ? setButtonValue("Read More") : setButtonValue("Read Less");
+    }
+
     return (
         <>
-            <Header1 />
-            <div className="sm:p-10 lg:pt-36 sm:pt-28 pt-20 bg-gray-200">
+            <Header />
+            <div className="sm:p-10 lg:pt-32 sm:pt-28 pt-20 bg-zinc-500">
                 <div className="lg:w-4/5 mx-auto min-h-screen flex flex-col sm:gap-16 gap-8">
                     {places.length > 0 ? (
                         places.map((p) => (
-                            <div key={p._id} className="p-8 bg-gradient-to-tr from-gray-200 to-gray-100 rounded-lg shadow-lg">
+                            <div key={p._id} className="p-8 bg-gradient-to-tr from-zinc-400 to-zinc-300 rounded-lg shadow-lg">
                                 <section className="flex flex-col justify-center items-center">
                                     <h2 className="text-2xl text-center font-semibold">{p.title1}</h2>
                                     <p className="text-lg text-center mb-6">{p.title2}</p>
                                     <div className="lg:w-1/2 w-full sm:h-64 h-44 rounded overflow-hidden mb-4">
                                         <img src={p.img1} alt="Place" className="w-full h-full object-cover" />
                                     </div>
-                                    <p className="mt-4 leading-relaxed">{p.content}</p>
+                                    <div className={`${showContent === true ? "" : "h-40 overflow-hidden"}`}>
+                                        <p className="mt-4 leading-relaxed text-justify">{p.content}</p>
+                                    </div>
+                                    {!showContent && (
+                                        <div className="h-8 w-full bg-gradient-to-t from-gray-400 to-transparent opacity-70"></div>
+                                    )}
                                 </section>
                                 
                                 <div className="flex gap-5 mt-4">
+                                    <button onClick={handleHiding} className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 text-xs sm:text-sm font-bold">{buttonValue}</button>
                                     <button onClick={() => toggleDropdown(p._id)} className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 text-xs sm:text-sm font-bold">Find Distance</button>
                                 </div>
                                 
@@ -195,7 +211,7 @@ function Places() {
                                         {[...p.comments].reverse().map((c) => (
                                             <div key={c._id} className="bg-gray-800 overflow-hidden px-3 py-2 rounded mb-3 text-white">
                                                 <img src={c.profileImage} className="w-5 h-5 rounded-full object-cover inline mb-1"/>
-                                                <p className="text-sm font-bold ml-1 inline">{c.username}</p>
+                                                <p className="text-sm text-zinc-400 font-bold ml-1 inline">{c.username}</p>
                                                 <p className="text-sm break-words">{c.comment}</p>
                                             </div>
                                         ))}
@@ -211,6 +227,7 @@ function Places() {
                     <ToastContainer />
                 </div>
             </div>
+            <ToastContainer/>
             <Footer />
         </>
     );

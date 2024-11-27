@@ -10,6 +10,7 @@ import ProfilePage from "./components/ProfilePage";
 import MostLikedPlaces from "./components/MostLikedPlaces";
 import Places from "./components/Places";
 import EditProfile from "./components/EditProfile";
+import SearchedPlace from "./components/SearchedPlace"
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/place" element={<Places/>}/>
         <Route path="/mostlikedplaces" element={<MostLikedPlaces/>}/>
         <Route path="/editProfile" element={<EditProfile/>}/>
+        <Route path="/searchedPlace" element={<SearchedPlace/>}/>
       </Routes>
     </Router>
   )

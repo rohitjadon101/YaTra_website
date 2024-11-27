@@ -7,12 +7,15 @@ const coordinatesKey = import.meta.env.VITE_coordinatesKey;
 const directionKey = import.meta.env.VITE_directionKey;
 
 function HomePage() {
+
+    // For toggling the Find Distance div
     const [dropdown, setDropdown] = useState(false);
     const toggleDropdown = () => {
         setDropdown(!dropdown);
         setResult(null);
     };
 
+    // Distance calculation Functionality
     const [result, setResult] = useState(null);
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
@@ -39,6 +42,7 @@ function HomePage() {
         }
     };
 
+    // For Fetching all the Categories
     const [categories, setCategories] = useState([]);
     useEffect(() => {
         fetch(`${backendUrl}/api/places/categories/all`)
@@ -47,6 +51,7 @@ function HomePage() {
             .catch((error) => console.error("Error fetching data:", error));
     }, [categories]);
 
+    // For Fetching most liked places
     const [likedPlaces, setLikedPlaces] = useState([]);
     useEffect(() => {
         fetch(`${backendUrl}/api/places/likedPlaces`)
@@ -54,6 +59,30 @@ function HomePage() {
         .then((data) => setLikedPlaces(data))
         .catch((err) => console.error('Error fetching liked Places : ',err));
     }, [likedPlaces]);
+
+    // Search place using Search bar Functionality
+    const [value, setValue] = useState('');
+    const [searchBy, setSearchBy] = useState(true);
+
+    const handleChange = (e) => {
+        setValue(e.target.value);
+    }
+
+    // This is for fetching the suggestions while searching
+    const [allPlaces, setAllPlaces] = useState([]);
+    useEffect(() => {
+        fetch(`${backendUrl}/api/places/allPlaces/all`)
+        .then((res) => res.json())
+        .then((data) => setAllPlaces(data))
+        .catch((err) => console.error("error in fetching places from backend : ", err))
+    }, []);
+
+    // While clicking Search Button
+    const onSearch = (searchTerm) => {
+        setValue(searchTerm);
+        cookies.set('searchedPlace', searchTerm);
+        window.location.href = '/searchedPlace';
+    }
 
     return (
         <>
@@ -100,6 +129,7 @@ function HomePage() {
                     <p className="text-gray-500 text-center mt-4 max-w-2xl mx-auto">
                         Explore Top-rated destinations loved by users.
                     </p>
+
                     {likedPlaces.length > 0 ? (
                         <>
                         <div className="py-10 flex justify-center items-center">
@@ -123,12 +153,62 @@ function HomePage() {
                     ) : (<div className="text-lg font-bold text-gray-600 text-center mt-4">No liked Places Found</div>)}
                 </section>
 
+                {/* Search Place Section */}
+                <section className="w-full p-10 flex flex-col items-center gap-4 bg-gradient-to-r from-zinc-800 to to-slate-500">
+                    <h1 className="sm:text-4xl text-lg font-bold text-gray-200 shadow-lg">Search Desired Place</h1>
+                    <div className="relative flex flex-col items-center">
+                        <div>
+                            <div className="inline-block mr-5">
+                                <p className="text-gray-400 pl-3">Search by</p>
+                                <select 
+                                onChange={(e) => setSearchBy(e.target.value === "placename")}
+                                className="bg-transparent text-gray-400 px-2 py-1 rounded-full outline-none border-2 border-gray-400"
+                                >
+                                    <option value="placename" >place name</option>
+                                    <option value="placeaddress" >place address</option>
+                                </select>
+                            </div>
+                            <input type="text" value={value} onChange={handleChange} className="mt-2 border-2 rounded-l-full border-gray-400 bg-transparent outline-none px-2 py-1 text-sm" placeholder="search place..."/>
+                            <button onClick={() => onSearch(value)} className="px-2 py-1 bg-blue-500 rounded-r-full">Search</button>
+                        </div>
+                        <div className={`absolute top-full flex flex-col gap-2 w-full p-4 mt-2 border-2 rounded-md border-gray-400 bg-zinc-700 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 ${value ? "opacity-100 h-60" : "opacity-0 h-0"}`}>
+                        {allPlaces.length > 0 ? (
+                            allPlaces.filter((item) => {
+                                const searchTerm = value.toLowerCase();
+                                const placeName = searchBy ? item.title1.toLowerCase() : item.title2.toLowerCase() ;
+
+                                return searchTerm && placeName.startsWith(searchTerm) && placeName !== searchTerm;
+                            })
+                            .length > 0 ? (
+                                allPlaces.filter((item) => {
+                                    const searchTerm = value.toLowerCase();
+                                    const placeName = searchBy ? item.title1.toLowerCase() : item.title2.toLowerCase() ;
+                                    
+                                    return searchTerm && placeName.startsWith(searchTerm) && placeName !== searchTerm;
+                                })
+                                .map((item) => (
+                                    <div 
+                                    key={item._id}
+                                    onClick={() => setValue(item.title1)}
+                                    className="border-[1px] rounded-md border-gray-500 px-2 py-1"
+                                    >
+                                        <p className="cursor-pointer leading-5">{item.title1}</p>
+                                        <p className="text-sm text-gray-400 leading-5">{item.title2}</p>
+                                    </div>
+                                ))   
+                            ) : (<div>No Place available</div>)
+                        ) : (<div>No Place available</div>)}
+                        </div>
+                    </div>
+                </section>
+
                 {/* Category Section */}
                 <section className="w-full py-10 sm:py-20 bg-gray-100">
                     <h2 className="text-4xl font-bold text-gray-800 text-center">Search By Category</h2>
                     <p className="text-gray-500 text-center max-w-2xl mx-auto mt-4">
                         Explore places based on specific interests.
                     </p>
+                    
                     {categories.length > 0 ? (
                         <div className="py-10 flex justify-center items-center">
                             <div className="sm:px-4 grid lg:grid-cols-4 grid-cols-2 gap-y-4 sm:gap-y-6 gap-x-4 sm:gap-x-6">
