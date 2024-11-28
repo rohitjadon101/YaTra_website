@@ -19,21 +19,7 @@ function SearchedPlace() {
     const [commentOpen, setCommentOpen] = useState(null);
     const [commentData, setCommentData] = useState({ comment: '' });
 
-
     const user = cookies.get('user') || null;
-
-    // This is for fetching the searched place from backend
-    const [place, setPlace] = useState(null);
-    const [placeName, setPlaceName] = useState(cookies.get('searchedPlace'));
-
-    useEffect(() => {
-        if (placeName) {
-            fetch(`${backendUrl}/api/places/searchedPlace/${placeName}`)
-            .then((res) => res.json())
-            .then((data) => setPlace(data))
-            .catch((error) => console.error("Error fetching data:", error));
-        }
-    }, [placeName]);
     
     // This is for Find Distance Functionality
     const toggleDropdown = (placeID) => {
@@ -61,6 +47,22 @@ function SearchedPlace() {
             setResult(<span className="text-red-400 text-sm">Unable to fetch distance</span>);
         }
     };
+
+    // This is for fetching the searched place from backend
+    const [place, setPlace] = useState(null);
+    const [placeName, setPlaceName] = useState(cookies.get('searchedPlace'));
+
+    useEffect(() => {
+        if (placeName) {
+            fetch(`${backendUrl}/api/places/searchedPlace/${placeName}`)
+                .then((res) => {
+                    if (!res.ok) throw new Error('Failed to fetch place');
+                    return res.json();
+                })
+                .then((data) => setPlace(data))
+                .catch((error) => console.error("Error fetching data:", error));
+        }
+    }, [placeName]);
 
     // like place functionality
     const handleLike = async (placeID) => {
@@ -147,15 +149,6 @@ function SearchedPlace() {
         }
     };
 
-
-    // Search place using search bar Functionality
-    const [searchBy, setSearchBy] = useState(true);
-    const [value, setValue] = useState('');
-
-    const handleSelect = (e) => {
-        setValue(e.target.value);
-    }
-
     // This is for fetching places for search suggestions
     const [allPlaces, setAllPlaces] = useState([]);
     useEffect(() => {
@@ -165,11 +158,15 @@ function SearchedPlace() {
         .catch((err) => console.error("error in fetching places from backend : ", err))
     }, []);
 
-    const onSearch = (searchTerm) => {
-        setPlaceName(searchTerm);
-        setPlaceName(searchTerm);
-    }
+    // Search place using search bar Functionality
+    const [searchBy, setSearchBy] = useState(true);
+    const [value, setValue] = useState('');
 
+    const onSearch = (searchTerm) => {
+        setValue('');
+        setPlaceName(searchTerm);
+    };
+    
     return(
         <div>
             <Header/>
@@ -190,11 +187,11 @@ function SearchedPlace() {
                                 </select>
                             </div>
                             <div className="inline-block">
-                                <input type="text" value={value} onChange={handleSelect} className="mt-2 border-2 rounded-l-full border-gray-400 bg-transparent outline-none px-2 py-1 text-sm" placeholder="search place..."/>
+                                <input type="text" value={value} onChange={(e) => setValue(e.target.value)} className="mt-2 border-2 rounded-l-full border-gray-400 bg-transparent outline-none px-2 py-1 text-sm" placeholder="search place..."/>
                                 <button onClick={() => onSearch(value)} className="px-2 py-1 bg-blue-500 rounded-r-full">Search</button>
                             </div>
                         </div>
-                        <div className={`absolute top-full flex flex-col gap-2 w-full p-4 mt-2 border-2 rounded-md border-gray-400 bg-zinc-700 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 ${value ? "opacity-100 h-60" : "opacity-0 h-0"}`}>
+                        <div className={`absolute top-full flex flex-col gap-2 lg:w-1/3 sm:w-1/2 p-4 mt-2 border-2 rounded-md border-gray-400 bg-zinc-700 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500 ${value ? "opacity-100 h-60" : "opacity-0 h-0"}`}>
                             {allPlaces.length > 0 ? (
                                 allPlaces.filter((item) => {
                                     const searchTerm = value.toLowerCase();
@@ -226,6 +223,7 @@ function SearchedPlace() {
                 </div>
 
                 {/* For displaying Place */}
+                {place ? (
                 <div className="lg:w-4/5 mx-auto min-h-screen flex flex-col sm:gap-16 gap-8">
                     <div className="p-8 bg-gradient-to-tr from-zinc-400 to-zinc-300 rounded-lg shadow-lg">
                         <section className="flex flex-col justify-center items-center">
@@ -284,6 +282,7 @@ function SearchedPlace() {
                         </div>
                     </div>
                 </div>
+                ) : (<div className="text-white font-semibold">No place selected</div>)}
             </div>
 
             <Footer/>

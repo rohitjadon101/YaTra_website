@@ -56,13 +56,13 @@ router.get('/:category', async (req,res) => {
 });
 
 // Get Searched place
-router.get('/searchedPlace/:placeName', async (req,res) => {
+router.get('/searchedPlace/:placeName', async (req, res) => {
     try {
-        const pl = await place.findOne({title1: req.params.placeName});
-        if (!pl) return res.status(404).json({ message: 'No place found'});
-        res.status(200).json(pl); 
+        const pl = await place.findOne({ title1: req.params.placeName });
+        if (!pl) return res.status(404).json({ message: 'No place found' });
+        res.status(200).json(pl);
     } catch (error) {
-        res.status(500).json({message: 'Server error. Please try again later.'});
+        res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 });
 

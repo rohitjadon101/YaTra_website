@@ -60,14 +60,6 @@ function HomePage() {
         .catch((err) => console.error('Error fetching liked Places : ',err));
     }, [likedPlaces]);
 
-    // Search place using Search bar Functionality
-    const [value, setValue] = useState('');
-    const [searchBy, setSearchBy] = useState(true);
-
-    const handleChange = (e) => {
-        setValue(e.target.value);
-    }
-
     // This is for fetching the suggestions while searching
     const [allPlaces, setAllPlaces] = useState([]);
     useEffect(() => {
@@ -76,6 +68,10 @@ function HomePage() {
         .then((data) => setAllPlaces(data))
         .catch((err) => console.error("error in fetching places from backend : ", err))
     }, []);
+
+    // Search place using Search bar Functionality
+    const [value, setValue] = useState('');
+    const [searchBy, setSearchBy] = useState(true);
 
     // While clicking Search Button
     const onSearch = (searchTerm) => {
@@ -169,7 +165,7 @@ function HomePage() {
                                 </select>
                             </div>
                             <div className="inline-block">
-                                <input type="text" value={value} onChange={handleChange} className="mt-2 border-2 rounded-l-full border-gray-400 bg-transparent outline-none px-2 py-1 text-sm" placeholder="search place..."/>
+                                <input type="text" value={value} onChange={(e) => setValue(e.target.value)} className="mt-2 border-2 rounded-l-full border-gray-400 bg-transparent outline-none px-2 py-1 text-sm" placeholder="search place..."/>
                                 <button onClick={() => onSearch(value)} className="px-2 py-1 bg-blue-500 rounded-r-full">Search</button>
                             </div>
                         </div>
