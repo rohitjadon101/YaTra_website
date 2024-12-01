@@ -121,7 +121,7 @@ function HomePage() {
 
                 {/* Most Liked places */}
                 <section className="w-full sm:py-20 py-10 bg-gradient-to-r from-gray-200 to-gray-100">
-                    <h1 className="text-4xl font-bold text-center text-gray-800">Most Liked Places</h1>
+                    <h1 className="sm:text-4xl text-2xl font-bold text-center text-gray-800">Most Liked Places</h1>
                     <p className="text-gray-500 text-center mt-4 max-w-2xl mx-auto">
                         Explore Top-rated destinations loved by users.
                     </p>
@@ -202,7 +202,7 @@ function HomePage() {
 
                 {/* Category Section */}
                 <section className="w-full py-10 sm:py-20 bg-gray-100">
-                    <h2 className="text-4xl font-bold text-gray-800 text-center">Search By Category</h2>
+                    <h2 className="sm:text-4xl text-2xl font-bold text-gray-800 text-center">Search By Category</h2>
                     <p className="text-gray-500 text-center max-w-2xl mx-auto mt-4">
                         Explore places based on specific interests.
                     </p>

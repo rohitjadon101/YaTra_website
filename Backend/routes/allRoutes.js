@@ -243,4 +243,24 @@ router.get('/likedSavedPlaces/:userID', async (req,res) => {
     }
 });
 
+// Functionality for Removing the Saved Place
+router.post('/RemoveSavedPlace/:placeID', auth, async (req,res) => {
+    try {
+        const placeID = req.params.placeID;
+        const userID = req.body.userID;
+        const foundUser = await user.findById(userID);
+
+        if(!foundUser) return res.status(404).json({message: "user not found"});
+        if(!placeID) return res.status(404).json({message: "place not found"});
+
+        if(foundUser.savedPlaces.includes(placeID)){
+            foundUser.savedPlaces = foundUser.savedPlaces.filter(id => id.toString() !== placeID);
+            await foundUser.save();
+        }
+        res.status(200).json();
+    } catch (error) {
+        res.status(500).json({message: "Server Error : ", error});
+    }
+})
+
 module.exports = router;

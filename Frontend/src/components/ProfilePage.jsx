@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SlArrowDown } from "react-icons/sl";
+
 const cookies = new Cookies();
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const adminEmail = import.meta.env.VITE_AdminEmail;
@@ -55,7 +56,7 @@ function ProfilePage(){
                         cookies.remove('user');
                         window.location.href = '/';
                     },
-                    autoClose: 1500,
+                    autoClose: 1000,
                     position: 'bottom-right',
                     closeOnClick: true,
                     pauseOnHover: false,
@@ -67,6 +68,47 @@ function ProfilePage(){
 
     const [likeOpen, setLikeOpen] = useState(false);
     const [saveOpen, setSaveOpen] = useState(false);
+
+    // For Removing Saved Place
+    const handleRemoveFromSave = async (placeID) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Remove Saved Place',
+            text: 'Are you sure you want to remove this place?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await fetch(`${backendUrl}/api/places/RemoveSavedPlace/${placeID}`,{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${cookies.get('token')}`
+                        },
+                        body: JSON.stringify({userID: user._id})
+                    });
+                    if(res.ok){
+                        toast.success("place removed successfully", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+                        setSavedPlaces(prev => prev.filter(place => place._id !== placeID));
+                    }
+                    else{
+                        const data = await res.json();
+                        toast.error(data.message, {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+                    }
+                } catch (error) {
+                    toast.error("Network Error:", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+                }
+            }
+        });
+    };
+
+    // For Rendering liked or saved Place when clicked 
+    const handleClickOnPlace = (placeName) => {
+        cookies.set('searchedPlace', placeName);
+        window.location.href = '/searchedPlace';
+    }
 
     return (
         <div className="min-h-screen bg-gray-300 text-white font-sans">
@@ -116,9 +158,11 @@ function ProfilePage(){
                                     {likedPlaces.length > 0 ? (
                                         likedPlaces.map(place => (
                                             <div key={place._id} className="flex gap-4 bg-gray-100 rounded-lg shadow p-4 hover:shadow-lg transition-shadow duration-200">
-                                                <img src={place.img1} alt={place.title1} className="w-32 h-20 object-cover rounded-md" />
-                                                <div>
-                                                    <h1 className="text-lg font-bold text-gray-800">{place.title1}</h1>
+                                                <div className="sm:w-40 sm:h-20 w-20 h-12 overflow-hidden">
+                                                    <img src={place.img1} alt={place.title1} className="w-full h-full object-cover rounded-md" />
+                                                </div>
+                                                <div onClick={() => handleClickOnPlace(place.title1)} className="hover:cursor-pointer">
+                                                    <h1 className="sm:text-lg font-bold text-gray-800">{place.title1}</h1>
                                                     <p className="text-sm text-gray-600">{place.title2}</p>
                                                 </div>
                                             </div>
@@ -141,10 +185,15 @@ function ProfilePage(){
                                     {savedPlaces.length > 0 ? (
                                         savedPlaces.map(place => (
                                             <div key={place._id} className="flex gap-4 bg-gray-100 rounded-lg shadow p-4 hover:shadow-lg transition-shadow duration-200">
-                                                <img src={place.img1} alt={place.title1} className="w-32 h-20 object-cover rounded-md" />
-                                                <div>
-                                                    <h1 className="text-lg font-bold text-gray-800">{place.title1}</h1>
-                                                    <p className="text-sm text-gray-600">{place.title2}</p>
+                                                <div className="sm:w-40 sm:h-20 w-28 h-12 overflow-hidden">
+                                                    <img src={place.img1} alt={place.title1} className="w-full h-full object-cover rounded-md" />
+                                                </div>
+                                                <div className="w-full flex justify-between">
+                                                    <div onClick={() => handleClickOnPlace(place.title1)} className="hover:cursor-pointer">
+                                                        <h1 className="sm:text-lg font-bold text-gray-800">{place.title1}</h1>
+                                                        <p className="text-sm text-gray-600">{place.title2}</p>
+                                                    </div>
+                                                    <div onClick={() => handleRemoveFromSave(place._id)} className="text-xs sm:text-sm text-red-600 cursor-pointer hover:scale-105">Remove</div>
                                                 </div>
                                             </div>
                                         ))
