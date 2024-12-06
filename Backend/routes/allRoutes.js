@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const place = require('../models/placeModel');
 const user = require('../models/userModel');
+const addedPlace = require('../models/addedPlaceModel');
 const category = require('../models/placeCategory')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -145,18 +146,39 @@ router.post('/addCategory', auth, async (req, res) => {
 })
 
 // Add new place
-router.post('/addPlace', auth, async (req, res) => {
+router.post('/addPlace/:userID', async (req, res) => {
     const { title1, title2, img1, content, category } = req.body;
-    
-    const newPlace = new place({
-        title1, title2, img1, content, category
-    });
-    
-    try {
-        const savedPlace = await newPlace.save();
-        res.json(savedPlace);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    const userID = req.params.userID;
+
+    const foundUser = await user.findById(userID);
+
+    // Place added by Admin
+    if(foundUser.email === "rj@gmail.com"){
+        const newPlace = new place({
+            title1, title2, img1, content, category
+        });
+        
+        try {
+            const savedPlace = await newPlace.save();
+            res.status(200).json({message: "place added successfully"});
+        } catch (error) {
+            console.error("Error : ", error.message);
+            res.status(500).json({ message: "something went wrong" });
+        }
+    }
+    // Place Added by User
+    else{
+        const newPlace = new addedPlace({
+            title1, title2, img1, content, category, userInfo: foundUser._id
+        });
+
+        try {
+            const savedPlace = await newPlace.save();
+            res.status(200).json({message: "place sent to Admin for review"});
+        } catch (error) {
+            console.error("Error : ", error.message);
+            res.status(500).json({ message: "something went wrong" });
+        }
     }
 });
 
@@ -260,6 +282,75 @@ router.post('/RemoveSavedPlace/:placeID', auth, async (req,res) => {
         res.status(200).json();
     } catch (error) {
         res.status(500).json({message: "Server Error : ", error});
+    }
+})
+
+// Functionality for Fetching the place added by a user
+router.get('/placeAddedByUser/:userID', async (req, res) => {
+    const userID = req.params.userID;
+
+    try {
+        const placesFound = await addedPlace.find({userInfo: userID});
+
+        if(!placesFound) return res.status(404).json({message: "No place added by you"});
+        res.status(200).json(placesFound);
+    } catch (error) {
+        console.log("Server Error : ", error);
+        res.status(500).json({message: "Server Issue"});
+    }
+})
+
+// Functionality for Fetching the place added by a user on Admin Page
+router.get('/addedPlace/adminPage', async (req, res) => {
+    try {
+        let placesFound = await addedPlace.find();
+        placesFound = placesFound.filter((p) => p.status === "Pending") || null;
+
+        if(!placesFound) return res.status(404).json({message: "No place added by user"});
+        res.status(200).json(placesFound);
+    } catch (error) {
+        console.log("Server Error : ", error);
+        res.status(500).json({message: "Server Issue"});
+    }
+})
+
+// Functionality for accepting the place added by user
+router.post('/addedPlace/:placeID', async (req, res) => {
+    const placeID = req.params.placeID;
+
+    try {
+        const foundPlace = await addedPlace.findById(placeID);
+
+        const newPlace = new place({
+            title1: foundPlace.title1,
+            title2: foundPlace.title2,
+            img1: foundPlace.img1,
+            content: foundPlace.content,
+            category: foundPlace.category
+        })
+        await newPlace.save();
+
+        foundPlace.status = "Added✅";
+        await foundPlace.save();
+
+        res.status(200).json();
+
+    } catch (error) {
+        console.log("Server Issue : ", error);
+        res.status(500).json();
+    }
+})
+
+// Functionality for Rejecting the place added by user
+router.post('/addedPlace/rejected/:placeID', async (req, res) => {
+    const placeID = req.params.placeID;
+
+    try {
+        const foundPlace = await addedPlace.findByIdAndDelete(placeID);
+        res.status(200).json();
+    } catch (error) {
+        console.log("Server Issue : ", error);
+        res.status(500).json();
     }
 })
 

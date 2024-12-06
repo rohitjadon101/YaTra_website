@@ -110,6 +110,72 @@ function ProfilePage(){
         window.location.href = '/searchedPlace';
     }
 
+    // For Fetching the places added by user
+    const [contribution, setContribution] = useState(false);
+
+    const [addedPlace, setAddedPlace] = useState([]);
+    useEffect(() => {
+        fetch(`${backendUrl}/api/places/placeAddedByUser/${user._id}`)
+        .then((res) => res.json())
+        .then((data) => setAddedPlace(data))
+        .catch((err) => console.error("Network Error:", err))
+    });
+
+    // For Fetching all the contributed places for admin page
+    const [addedByUser, setAddedByUser] = useState([]);
+    useEffect(() => {
+        fetch(`${backendUrl}/api/places/addedPlace/adminPage`)
+        .then((res) => res.json())
+        .then((data) => setAddedByUser(data))
+        .catch((err) => console.error("Network Error:", err))
+    });
+
+    // When Admin Accepted the place contributed by user
+    const handleAccept = (placeID) => {
+        fetch(`${backendUrl}/api/places/addedPlace/${placeID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify()
+        })
+        .then((res) => {
+            if(res.ok){
+                toast.success("place added successfully", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+            }
+            else{
+                toast.error("something went wrong", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+            }
+        })
+        .catch((err) => {
+            console.log("Server Issue : ", err);
+            toast.error("Network Error:", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+        })
+    };
+
+    // When Admin Accepted the place contributed by user
+    const handleReject = (placeID) => {
+        fetch(`${backendUrl}/api/places/addedPlace/rejected/${placeID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify()
+        })
+        .then((res) => {
+            if(res.ok){
+                toast.success("place removed successfully", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+            }
+            else{
+                toast.error("something went wrong", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+            }
+        })
+        .catch((err) => {
+            console.log("Server Issue : ", err);
+            toast.error("Network Error:", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+        })
+    };
+
     return (
         <div className="min-h-screen bg-gray-300 text-white font-sans">
             {user.email === adminEmail ? (
@@ -129,6 +195,52 @@ function ProfilePage(){
                                 <a href="/addPlace" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Add New Place</a>
                                 <a href="/addCategory" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Add New Category</a>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                        {/* Contribution Box */}
+                        <div className="mt-8 w-full md:w-3/4">
+                            <div className="flex items-center gap-4 p-4 bg-gray-800 rounded-t-md cursor-pointer" onClick={() => setContribution(!contribution)}>
+                                <SlArrowDown className={`transition-transform ${contribution ? 'rotate-180' : ''}`} />
+                                <p className="text-xl font-semibold">Contribution</p>
+                            </div>
+
+                            {contribution && (
+                                <div className="bg-gray-800 pl-10">
+                                    <h1 className="border-b-2 border-gray-400 font-semibold text-gray-400">Places added by users</h1>
+
+                                    {addedByUser.length > 0 ? (
+                                        addedByUser.map((place) => (
+                                            <section key={place._id} className="py-10">
+                                                <div className="flex justify-evenly">
+                                                    <div>
+                                                        <label className="text-gray-400 leading-3 text-sm">Name</label>
+                                                        <h1 className="text-xl font-semibold leading-3 mb-4">{place.title1}</h1>
+
+                                                        <label className="text-gray-400 leading-3 text-sm">Address</label>
+                                                        <h1 className="font-semibold leading-3 mb-4">{place.title2}</h1>
+
+                                                        <label className="text-gray-400 leading-3 text-sm">Category</label>
+                                                        <h1 className="font-semibold leading-3 mb-4">{place.category}</h1>
+                                                    </div>
+                                                    <div className="w-60 h-36 overflow-hidden rounded-md">
+                                                        <img src={place.img1} className="w-full h-full object-cover"/>
+                                                    </div>
+                                                </div>
+                                                <div className="px-20 mt-4">{place.content}</div>
+                                                <div className="px-20 pt-4 py-2 flex items-center gap-4">
+                                                    <button onClick={() => handleAccept(place._id)} className="px-4 py-1 font-bold bg-green-600 hover:bg-green-700 rounded-lg">Accept</button>
+                                                    <button onClick={() => handleReject(place._id)} className="px-4 py-1 font-bold bg-red-600 hover:bg-red-700 rounded-lg">Reject</button>
+                                                </div>
+                                                <div className="mt-4 w-full h-[2px] rounded-md bg-gray-600"></div>
+                                            </section>
+                                        ))
+                                    ) : (
+                                        <div className="p-5 text-gray-200 font-semibold">No contribution from user</div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                     <ToastContainer />
@@ -193,13 +305,91 @@ function ProfilePage(){
                                                         <h1 className="sm:text-lg font-bold text-gray-800">{place.title1}</h1>
                                                         <p className="text-sm text-gray-600">{place.title2}</p>
                                                     </div>
-                                                    <div onClick={() => handleRemoveFromSave(place._id)} className="text-xs sm:text-sm text-red-600 cursor-pointer hover:scale-105">Remove</div>
+                                                    <div onClick={() => handleRemoveFromSave(place._id)} className="text-xs sm:text-sm text-red-600 font-bold cursor-pointer hover:scale-105">Remove</div>
                                                 </div>
                                             </div>
                                         ))
                                     ) : (
                                         <p className="text-center text-gray-600">No saved places found.</p>
                                     )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Contribution */}
+                        <div className="mt-8 w-full md:w-3/4">
+                            <div className="flex items-center gap-4 p-4 bg-gray-800 rounded-t-md cursor-pointer" onClick={() => setContribution(!contribution)}>
+                                <SlArrowDown className={`transition-transform ${contribution ? 'rotate-180' : ''}`} />
+                                <p className="text-xl font-semibold">Contribution</p>
+                            </div>
+
+                            {contribution && (
+                                <div className="bg-gray-800 pl-10">
+                                    <a href="/addPlace" className="px-4 py-2 bg-gray-600 hover:bg-gray-700 font-bold cursor-pointer rounded-lg ">add Place</a>
+                                    <div className="mt-4">
+                                        <h1 className="font-semibold text-gray-400">Places added by you</h1>
+                                        <p className="text-xs text-gray-400 border-b-2 border-gray-400">(places REJECTED by admin will no longer be displayed here)</p>
+
+                                        {addedPlace.length > 0 ? (
+                                            addedPlace.map((place) => (
+                                                <section key={place._id} className="py-10">
+                                                    <div className="flex justify-evenly">
+                                                        <div>
+                                                            <label className="text-gray-400 leading-3 text-sm">Name</label>
+                                                            <h1 className="text-xl font-semibold leading-3 mb-4">{place.title1}</h1>
+
+                                                            <label className="text-gray-400 leading-3 text-sm">Address</label>
+                                                            <h1 className="font-semibold leading-3 mb-4">{place.title2}</h1>
+
+                                                            <label className="text-gray-400 leading-3 text-sm">Category</label>
+                                                            <h1 className="font-semibold leading-3 mb-4">{place.category}</h1>
+                                                        </div>
+                                                        <div className="w-60 h-36 overflow-hidden rounded-md">
+                                                            <img src={place.img1} className="w-full h-full object-cover"/>
+                                                        </div>
+                                                    </div>
+                                                    <div className="px-20 mt-4">{place.content}</div>
+                                                    <div className="px-20 py-2">
+                                                        <label className="text-gray-400 leading-3 text-sm">status</label>
+                                                        <h1 className="leading-3 text-gray-300">{place.status}</h1>
+                                                    </div>
+                                                    <div className="mt-4 w-full h-[2px] rounded-md bg-gray-600"></div>
+                                                </section>
+                                            ))
+                                        ) : (
+                                            <div className="p-5 text-gray-200 font-semibold">No place added by you</div>
+                                        )}
+
+                                        {/*<section className="py-10">
+                                            <div className="flex justify-evenly">
+                                                <div>
+                                                    <label className="text-gray-400 leading-3 text-sm">Name</label>
+                                                    <h1 className="text-xl font-semibold leading-3 mb-4">Ramanathaswamy Temple</h1>
+
+                                                    <label className="text-gray-400 leading-3 text-sm">Address</label>
+                                                    <h1 className="text-lg font-semibold leading-3 mb-4">Tamil Nadu, India</h1>
+
+                                                    <label className="text-gray-400 leading-3 text-sm">Category</label>
+                                                    <h1 className="text-lg font-semibold leading-3 mb-4">Temple</h1>
+                                                </div>
+                                                <div className="w-48 h-32 bg-red-500 overflow-hidden">
+
+                                                </div>
+                                            </div>
+                                            <div className="px-20 mt-4">
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum hic enim harum deserunt placeat. Magni iusto, libero quos quidem quasi deserunt sint sequi quia optio quas? Consequatur porro enim ad ab adipisci totam voluptatibus, illo doloribus alias perspiciatis excepturi nostrum officiis cupiditate ea tempora neque cum delectus amet quaerat iure!
+                                            </div>
+                                            <div className="px-20 py-2">
+                                                <label className="text-gray-400 leading-3 text-sm">status</label>
+                                                <h1 className="leading-3 text-gray-300">pending</h1>
+                                            </div>
+                                            <div className="px-20 py-2">
+                                                <label className="text-gray-400 leading-3 text-sm">message from user</label>
+                                                <p className="leading-3 text-gray-300">No message available</p>
+                                            </div>
+                                            <div className="mt-4 w-full h-[2px] rounded-md bg-gray-600"></div>
+                                        </section>*/}
+                                    </div>
                                 </div>
                             )}
                         </div>

@@ -12,7 +12,7 @@ function AddPlace() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const token = cookies.get("token");
 
@@ -28,25 +28,21 @@ function AddPlace() {
       })
     }
 
-    fetch(`${backendUrl}/api/places/addPlace`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.message) {
-        toast.error(`${data.message}`,{
-          autoClose: 1000,
-          closeOnClick: true,
-          pauseOnHover: false,
-          theme: 'colored'
-        })
-      } else {
-        toast.success("Place added successfully",{
+    const user = cookies.get('user');
+
+    try {
+      const res = await fetch(`${backendUrl}/api/places/addPlace/${user._id}`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify(formData)
+      });
+  
+      const data = await res.json();
+      if(res.ok){
+        toast.success(data.message,{
           onClose: () => {
             window.location.href = '/addPlace';
           },
@@ -56,7 +52,17 @@ function AddPlace() {
           theme: 'colored'
         })
       }
-    })
+      else{
+        toast.error(`${data.message}`,{
+          autoClose: 1000,
+          closeOnClick: true,
+          pauseOnHover: false,
+          theme: 'colored'
+        })
+      }
+    } catch (error) {
+      toast.error("Network Error:", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
+    }
   };
 
   return (
@@ -69,6 +75,8 @@ function AddPlace() {
           <input name="title2" value={formData.title2} onChange={handleChange} placeholder="address of place" required className="p-2 rounded bg-transparent border-2 border-zinc-600 outline-none" />
           <input name="img1" value={formData.img1} onChange={handleChange} placeholder="Image URL 1" required className="p-2 rounded bg-transparent border-2 border-zinc-600 outline-none" />
           <textarea name="content" value={formData.content} onChange={handleChange} placeholder="Content..." required className="p-2 rounded bg-transparent border-2 border-zinc-600 outline-none h-40 resize-none" />
+          
+          <p className="leading-5 text-gray-400">available categories are, Temple, National Park, Fort, Jyotirlinga, South Place, Haunted Place, Historical Place, Beach</p>
           <input name="category" value={formData.category} onChange={handleChange} placeholder="category" required className="p-2 rounded bg-transparent border-2 border-zinc-600 outline-none" />
           <button type="submit" className="p-2 bg-zinc-600 rounded text-white hover:bg-zinc-700">Add Place</button>
         </form>

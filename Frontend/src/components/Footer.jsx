@@ -18,9 +18,9 @@ function Footer() {
           <div>
             <h1 className="sm:text-2xl text-lg text-white font-serif mb-2">Contact us</h1>
             <ul className="flex flex-col gap-4 cursor-pointer">
-              <li><a href="" className="flex justify-center items-center gap-2 hover:text-zinc-300">Gmail<AiFillMail /></a></li>
+              <li><a href="mailto:rohitjadon820@gmail.com" className="flex justify-center items-center gap-2 hover:text-zinc-300">Gmail<AiFillMail /></a></li>
               <li><a href="" className="flex justify-center items-center gap-2 hover:text-zinc-300">Twitter<FaSquareXTwitter /></a></li>
-              <li><a href="" className="flex justify-center items-center gap-2 hover:text-zinc-300">Instagram<AiOutlineInstagram /></a></li>
+              <li><a href="https://www.instagram.com/rohitjadon_" className="flex justify-center items-center gap-2 hover:text-zinc-300">Instagram<AiOutlineInstagram /></a></li>
             </ul>
           </div>
           <div>
