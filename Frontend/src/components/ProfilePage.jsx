@@ -188,7 +188,6 @@ function ProfilePage(){
                             <p className="text-center text-zinc-500 mb-4">Welcome back to your Admin Dashboard!</p>
                             <div className="flex justify-center gap-4 mt-4">
                                 <a href="/" className="text-blue-600 hover:text-blue-800 hover:scale-105">Home</a>
-                                <a href="/editProfile" className="text-gray-600 hover:text-gray-800 hover:scale-105">Edit</a>
                                 <button onClick={handleLogout} className="text-red-500 hover:text-red-600 hover:scale-105">Logout</button>
                             </div>
                             <div className="flex justify-center gap-4 mt-6">
@@ -348,7 +347,7 @@ function ProfilePage(){
                                                             <img src={place.img1} className="w-full h-full object-cover"/>
                                                         </div>
                                                     </div>
-                                                    <div className="px-20 mt-4">{place.content}</div>
+                                                    <div className="px-20 mt-4 text-justify">{place.content}</div>
                                                     <div className="px-20 py-2">
                                                         <label className="text-gray-400 leading-3 text-sm">status</label>
                                                         <h1 className="leading-3 text-gray-300">{place.status}</h1>
@@ -359,36 +358,6 @@ function ProfilePage(){
                                         ) : (
                                             <div className="p-5 text-gray-200 font-semibold">No place added by you</div>
                                         )}
-
-                                        {/*<section className="py-10">
-                                            <div className="flex justify-evenly">
-                                                <div>
-                                                    <label className="text-gray-400 leading-3 text-sm">Name</label>
-                                                    <h1 className="text-xl font-semibold leading-3 mb-4">Ramanathaswamy Temple</h1>
-
-                                                    <label className="text-gray-400 leading-3 text-sm">Address</label>
-                                                    <h1 className="text-lg font-semibold leading-3 mb-4">Tamil Nadu, India</h1>
-
-                                                    <label className="text-gray-400 leading-3 text-sm">Category</label>
-                                                    <h1 className="text-lg font-semibold leading-3 mb-4">Temple</h1>
-                                                </div>
-                                                <div className="w-48 h-32 bg-red-500 overflow-hidden">
-
-                                                </div>
-                                            </div>
-                                            <div className="px-20 mt-4">
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum hic enim harum deserunt placeat. Magni iusto, libero quos quidem quasi deserunt sint sequi quia optio quas? Consequatur porro enim ad ab adipisci totam voluptatibus, illo doloribus alias perspiciatis excepturi nostrum officiis cupiditate ea tempora neque cum delectus amet quaerat iure!
-                                            </div>
-                                            <div className="px-20 py-2">
-                                                <label className="text-gray-400 leading-3 text-sm">status</label>
-                                                <h1 className="leading-3 text-gray-300">pending</h1>
-                                            </div>
-                                            <div className="px-20 py-2">
-                                                <label className="text-gray-400 leading-3 text-sm">message from user</label>
-                                                <p className="leading-3 text-gray-300">No message available</p>
-                                            </div>
-                                            <div className="mt-4 w-full h-[2px] rounded-md bg-gray-600"></div>
-                                        </section>*/}
                                     </div>
                                 </div>
                             )}
