@@ -6,7 +6,7 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 function Footer() {
 
     return (
-      <div className="sm:min-h-64 bg-[#272727] text-white sm:p-4 p-2 sm:text-base text-[10px] flex flex-col">
+      <div className="sm:min-h-64 bg-[#272727] text-white sm:p-4 p-2 sm:text-base text-[10px] flex flex-col overflow-x-hidden">
         <div className="flex justify-evenly sm:mt-8 mt-6 text-zinc-500">
           <div>
             <h1 className="sm:text-2xl text-lg text-white font-serif mb-2">Join us</h1>

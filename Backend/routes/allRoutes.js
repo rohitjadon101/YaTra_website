@@ -304,7 +304,7 @@ router.get('/placeAddedByUser/:userID', async (req, res) => {
 router.get('/addedPlace/adminPage', async (req, res) => {
     try {
         let placesFound = await addedPlace.find();
-        placesFound = placesFound.filter((p) => p.status === "Pending") || null;
+        placesFound = placesFound.filter((p) => p.status === "Pending");
 
         if(!placesFound) return res.status(404).json({message: "No place added by user"});
         res.status(200).json(placesFound);

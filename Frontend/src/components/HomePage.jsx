@@ -82,7 +82,7 @@ function HomePage() {
 
     return (
         <>
-            <div className="text-white min-h-screen flex flex-col items-center justify-center sm:pt-24 pt-10">
+            <div className="text-white min-h-screen flex flex-col items-center justify-center sm:pt-24 pt-10 overflow-x-hidden">
                 
                 {/* Hero Section */}
                 <section className="relative w-full h-screen flex flex-col items-center justify-center text-center p-8 bg-gradient-to-b from-gray-900 to-gray-700">

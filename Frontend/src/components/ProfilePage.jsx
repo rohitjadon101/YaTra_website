@@ -11,14 +11,16 @@ const adminEmail = import.meta.env.VITE_AdminEmail;
 
 function ProfilePage(){
     const user = cookies.get('user');
+    const token = cookies.get('token');
+    if (!token || !user) {
+        window.location.href = '/login';
+        return;
+    }
+
     const [likedPlaces, setLikedPlaces] = useState([]);
     const [savedPlaces, setSavedPlaces] = useState([]);
 
     useEffect(() => {
-        const token = cookies.get('token');
-        if (!token) {
-            window.location.href = '/login';
-        }
 
         const getPlaces = async () => {
             const res = await fetch(`${backendUrl}/api/places/likedSavedPlaces/${user._id}`, {
@@ -119,23 +121,30 @@ function ProfilePage(){
         .then((res) => res.json())
         .then((data) => setAddedPlace(data))
         .catch((err) => console.error("Network Error:", err))
-    });
+    }, [user._id]);
 
     // For Fetching all the contributed places for admin page
     const [addedByUser, setAddedByUser] = useState([]);
     useEffect(() => {
-        fetch(`${backendUrl}/api/places/addedPlace/adminPage`)
-        .then((res) => res.json())
-        .then((data) => setAddedByUser(data))
-        .catch((err) => console.error("Network Error:", err))
-    });
+        fetch(`${backendUrl}/api/places/addedPlace/adminPage`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${cookies.get('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => setAddedByUser(data))
+            .catch((err) => console.error("Network Error:", err));
+    }, []);
 
     // When Admin Accepted the place contributed by user
     const handleAccept = (placeID) => {
         fetch(`${backendUrl}/api/places/addedPlace/${placeID}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${cookies.get('token')}`
             },
             body: JSON.stringify()
         })
@@ -148,7 +157,7 @@ function ProfilePage(){
             }
         })
         .catch((err) => {
-            console.log("Server Issue : ", err);
+            console.log("Server Issue : ", err.message);
             toast.error("Network Error:", {autoClose: 1500, position: 'bottom-right', closeOnClick: true, pauseOnHover: false, theme: 'colored'});
         })
     };
@@ -199,36 +208,36 @@ function ProfilePage(){
 
                     <div className="flex flex-col items-center">
                         {/* Contribution Box */}
-                        <div className="mt-8 w-full md:w-3/4">
+                        <div className="mt-8 w-full">
                             <div className="flex items-center gap-4 p-4 bg-gray-800 rounded-t-md cursor-pointer" onClick={() => setContribution(!contribution)}>
                                 <SlArrowDown className={`transition-transform ${contribution ? 'rotate-180' : ''}`} />
                                 <p className="text-xl font-semibold">Contribution</p>
                             </div>
 
                             {contribution && (
-                                <div className="bg-gray-800 pl-10">
+                                <div className="bg-gray-800 sm:px-10 px-4">
                                     <h1 className="border-b-2 border-gray-400 font-semibold text-gray-400">Places added by users</h1>
 
                                     {addedByUser.length > 0 ? (
                                         addedByUser.map((place) => (
                                             <section key={place._id} className="py-10">
-                                                <div className="flex justify-evenly">
+                                                <div className="flex justify-center gap-2 sm:justify-evenly">
                                                     <div>
                                                         <label className="text-gray-400 leading-3 text-sm">Name</label>
-                                                        <h1 className="text-xl font-semibold leading-3 mb-4">{place.title1}</h1>
+                                                        <h1 className="sm:text-xl font-semibold sm:leading-3 mb-4">{place.title1}</h1>
 
                                                         <label className="text-gray-400 leading-3 text-sm">Address</label>
-                                                        <h1 className="font-semibold leading-3 mb-4">{place.title2}</h1>
+                                                        <h1 className="font-semibold sm:leading-3 mb-4">{place.title2}</h1>
 
                                                         <label className="text-gray-400 leading-3 text-sm">Category</label>
-                                                        <h1 className="font-semibold leading-3 mb-4">{place.category}</h1>
+                                                        <h1 className="font-semibold sm:leading-3 mb-4">{place.category}</h1>
                                                     </div>
-                                                    <div className="w-60 h-36 overflow-hidden rounded-md">
+                                                    <div className="sm:w-60 sm:h-36 w-44 h-28 overflow-hidden rounded-md">
                                                         <img src={place.img1} className="w-full h-full object-cover"/>
                                                     </div>
                                                 </div>
-                                                <div className="px-20 mt-4">{place.content}</div>
-                                                <div className="px-20 pt-4 py-2 flex items-center gap-4">
+                                                <div className="sm:px-20 mt-4 text-justify">{place.content}</div>
+                                                <div className="sm:px-20 pt-4 py-2 flex items-center gap-4">
                                                     <button onClick={() => handleAccept(place._id)} className="px-4 py-1 font-bold bg-green-600 hover:bg-green-700 rounded-lg">Accept</button>
                                                     <button onClick={() => handleReject(place._id)} className="px-4 py-1 font-bold bg-red-600 hover:bg-red-700 rounded-lg">Reject</button>
                                                 </div>
@@ -323,7 +332,7 @@ function ProfilePage(){
                             </div>
 
                             {contribution && (
-                                <div className="bg-gray-800 pl-10">
+                                <div className="bg-gray-800 sm:px-10 px-4">
                                     <a href="/addPlace" className="px-4 py-2 bg-gray-600 hover:bg-gray-700 font-bold cursor-pointer rounded-lg ">add Place</a>
                                     <div className="mt-4">
                                         <h1 className="font-semibold text-gray-400">Places added by you</h1>
@@ -332,23 +341,23 @@ function ProfilePage(){
                                         {addedPlace.length > 0 ? (
                                             addedPlace.map((place) => (
                                                 <section key={place._id} className="py-10">
-                                                    <div className="flex justify-evenly">
+                                                    <div className="flex sm:justify-evenly justify-center gap-2">
                                                         <div>
                                                             <label className="text-gray-400 leading-3 text-sm">Name</label>
-                                                            <h1 className="text-xl font-semibold leading-3 mb-4">{place.title1}</h1>
+                                                            <h1 className="sm:text-xl font-semibold sm:leading-3 mb-4">{place.title1}</h1>
 
                                                             <label className="text-gray-400 leading-3 text-sm">Address</label>
-                                                            <h1 className="font-semibold leading-3 mb-4">{place.title2}</h1>
+                                                            <h1 className="font-semibold sm:leading-3 mb-4">{place.title2}</h1>
 
                                                             <label className="text-gray-400 leading-3 text-sm">Category</label>
-                                                            <h1 className="font-semibold leading-3 mb-4">{place.category}</h1>
+                                                            <h1 className="font-semibold sm:leading-3 mb-4">{place.category}</h1>
                                                         </div>
-                                                        <div className="w-60 h-36 overflow-hidden rounded-md">
+                                                        <div className="sm:w-60 sm:h-36 w-44 h-28 overflow-hidden rounded-md">
                                                             <img src={place.img1} className="w-full h-full object-cover"/>
                                                         </div>
                                                     </div>
-                                                    <div className="px-20 mt-4 text-justify">{place.content}</div>
-                                                    <div className="px-20 py-2">
+                                                    <div className="sm:px-20 mt-4 text-justify">{place.content}</div>
+                                                    <div className="sm:px-20 py-2">
                                                         <label className="text-gray-400 leading-3 text-sm">status</label>
                                                         <h1 className="leading-3 text-gray-300">{place.status}</h1>
                                                     </div>

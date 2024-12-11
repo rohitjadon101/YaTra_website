@@ -9,7 +9,7 @@ function Header() {
     let user = cookies.get('user') || null;
 
     return (
-        <header className="w-full z-50 fixed flex justify-between  sm:p-6 p-4 bg-gradient-to-r from-gray-800 to-gray-600 text-white shadow-md">
+        <header className="w-full z-50 fixed flex justify-between  sm:p-6 p-4 bg-gradient-to-r from-gray-800 to-gray-600 text-white shadow-md overflow-x-hidden">
             {/* Logo and Title */}
             <div className="flex items-center sm:gap-4 gap-2">
                 <div className="w-12 h-12 rounded-full overflow-hidden shadow-md">
