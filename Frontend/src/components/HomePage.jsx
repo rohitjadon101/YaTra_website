@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
+import RiseLoader from "react-spinners/RiseLoader";
+import PulseLoader  from "react-spinners/PulseLoader";
 
 const cookies = new Cookies();
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -20,8 +22,12 @@ function HomePage() {
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
 
+    // For Distance calculation loading
+    const [distanceCaclLoading, setDistanceCaclLoading] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setDistanceCaclLoading(true);
         try {
             let res1 = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${from}&key=${coordinatesKey}`);
             let data1 = await res1.json();
@@ -35,6 +41,7 @@ function HomePage() {
 
             let finalRes = await fetch(`https://api.openrouteservice.org/v2/directions/driving-car?api_key=${directionKey}&start=${[long1, lat1]}&end=${[long2, lat2]}`);
             let finalData = await finalRes.json();
+            setDistanceCaclLoading(false);          // as the data is fetched from backend, loading is set to be false
             let distance = (finalData.features[0].properties.summary.distance / 1000).toFixed(2);
             setResult(<span className="text-green-600 font-bold">{distance} KM</span>);
         } catch (error) {
@@ -42,12 +49,18 @@ function HomePage() {
         }
     };
 
+    // For loading Functionality
+    const [loading, setLoading] = useState(true);
+
     // For Fetching all the Categories
     const [categories, setCategories] = useState([]);
     useEffect(() => {
         fetch(`${backendUrl}/api/places/categories/all`)
             .then((res) => res.json())
-            .then((data) => setCategories(data))
+            .then((data) => {
+                setCategories(data)
+                setLoading(false)               // as the data is fetched from backend, loading is set to be false
+            })
             .catch((error) => console.error("Error fetching data:", error));
     }, [categories]);
 
@@ -114,7 +127,18 @@ function HomePage() {
                                 />
                             </div>
                             <button type="submit" className="w-full mt-4 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition duration-300 font-bold">Calculate Distance</button>
-                            {result && <div className="mt-4 text-lg font-bold">Distance: {result}</div>}
+                            {distanceCaclLoading ? (
+                                <div className="flex justify-center items-center">
+                                    <PulseLoader 
+                                    color="#3dac4a"
+                                    loading={distanceCaclLoading}
+                                    size={10}
+                                    aria-label="Loading Spinner"
+                                    data-testid="loader"
+                                    /> 
+                                </div>
+                            )
+                            : result && <div className="mt-4 text-lg font-bold">Distance: {result}</div>}
                         </form>
                     </div>
                 </section>
@@ -126,27 +150,39 @@ function HomePage() {
                         Explore Top-rated destinations loved by users.
                     </p>
 
-                    {likedPlaces.length > 0 ? (
-                        <>
-                        <div className="py-10 flex justify-center items-center">
-                            <div className="sm:px-4 grid lg:grid-cols-4 grid-cols-2 gap-y-4 gap-x-4 sm:gap-x-6">
-                                {likedPlaces.map((lp) => (
-                                    <div key={lp._id} className="w-36 h-48 sm:w-60 sm:h-80 bg-white rounded-lg shadow-lg overflow-hidden">
-                                        <img src={lp.img1} className="w-full h-24 sm:h-44 object-cover"/>
-                                        <div className="p-2 sm:p-4">
-                                            <h3 className="sm:text-lg font-semibold text-gray-800">{lp.title1}</h3>
-                                            <p className="text-gray-600 text-xs sm:text-base">{lp.title2}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                    {loading ? (
+                            <div className="py-10 flex justify-center items-center">
+                                <RiseLoader
+                                color="#232d7b"
+                                loading={loading}
+                                size={20}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                                /> 
                             </div>
-                        </div>
-                        <div className="mt-4 flex flex-col gap-4 justify-center items-center">
-                            <h4 className="text-gray-500">Explore Top 10 Liked Places</h4>
-                            <a href="/mostlikedPlaces" className="px-8 py-2 text-xl font-semibold rounded-full bg-blue-600 hover:bg-blue-700">Explore</a>
-                        </div>
-                        </>
-                    ) : (<div className="text-lg font-bold text-gray-600 text-center mt-4">No liked Places Found</div>)}
+                        )
+                        : likedPlaces.length > 0 ? (
+                            <>
+                            <div className="py-10 flex justify-center items-center">
+                                <div className="sm:px-4 grid lg:grid-cols-4 grid-cols-2 gap-y-4 gap-x-4 sm:gap-x-6">
+                                    {likedPlaces.map((lp) => (
+                                        <div key={lp._id} className="w-36 h-48 sm:w-60 sm:h-80 bg-white rounded-lg shadow-lg overflow-hidden">
+                                            <img src={lp.img1} className="w-full h-24 sm:h-44 object-cover"/>
+                                            <div className="p-2 sm:p-4">
+                                                <h3 className="sm:text-lg font-semibold text-gray-800">{lp.title1}</h3>
+                                                <p className="text-gray-600 text-xs sm:text-base">{lp.title2}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="mt-4 flex flex-col gap-4 justify-center items-center">
+                                <h4 className="text-gray-500">Explore Top 10 Liked Places</h4>
+                                <a href="/mostlikedPlaces" className="px-8 py-2 text-xl font-semibold rounded-full bg-blue-600 hover:bg-blue-700">Explore</a>
+                            </div>
+                            </>
+                        ) : (<div className="text-lg font-bold text-gray-600 text-center mt-4">No liked Places Found</div>)
+                    }
                 </section>
 
                 {/* Search Place Section */}
@@ -207,7 +243,18 @@ function HomePage() {
                         Explore places based on specific interests.
                     </p>
                     
-                    {categories.length > 0 ? (
+                    {loading ? (
+                        <div className="py-10 flex justify-center items-center">
+                            <RiseLoader
+                            color="#232d7b"
+                            loading={loading}
+                            size={20}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                            /> 
+                        </div>
+                    )
+                    : categories.length > 0 ? (
                         <div className="py-10 flex justify-center items-center">
                             <div className="sm:px-4 grid lg:grid-cols-4 grid-cols-2 gap-y-4 sm:gap-y-6 gap-x-4 sm:gap-x-6">
                                 {categories.map((c) => (
