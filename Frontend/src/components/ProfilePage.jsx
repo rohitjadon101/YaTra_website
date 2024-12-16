@@ -339,7 +339,7 @@ function ProfilePage(){
                                         <p className="text-xs text-gray-400 border-b-2 border-gray-400">(places REJECTED by admin will no longer be displayed here)</p>
 
                                         {addedPlace.length > 0 ? (
-                                            addedPlace.map((place) => (
+                                            [...addedPlace].reverse().map((place) => (
                                                 <section key={place._id} className="py-10">
                                                     <div className="flex sm:justify-evenly justify-center gap-2">
                                                         <div>
