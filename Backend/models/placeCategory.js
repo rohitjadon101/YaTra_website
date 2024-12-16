@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const placeCategorySchema = mongoose.Schema({
-    title1: String,
-    description: String,
-    img1: String
+    title1: { type: String, required: true },
+    description: { type: String, required: true },
+    img1: { type: String, required: true }
 })
 
 module.exports = mongoose.model('placeCategory', placeCategorySchema);

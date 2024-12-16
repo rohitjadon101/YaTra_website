@@ -156,11 +156,11 @@ function Places() {
     return (
         <>
             <Header />
-            <div className="sm:p-10 lg:pt-32 sm:pt-28 pt-20 bg-zinc-500">
+            <div className="sm:p-10 lg:pt-32 sm:pt-28 pt-20 bg-gray-800">
                 <div className="lg:w-4/5 mx-auto min-h-screen flex flex-col sm:gap-16 gap-8">
                     {places.length > 0 ? (
                         places.map((p) => (
-                            <div key={p._id} className="p-8 bg-gradient-to-tr from-zinc-400 to-zinc-300 rounded-lg shadow-lg">
+                            <div key={p._id} className="p-8 bg-gray-800 text-white rounded-lg shadow-lg">
                                 <section className="flex flex-col justify-center items-center">
                                     <h2 className="text-2xl text-center font-semibold">{p.title1}</h2>
                                     <p className="text-lg text-center mb-6">{p.title2}</p>

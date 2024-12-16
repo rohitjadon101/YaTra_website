@@ -12,7 +12,7 @@ function AddCategory(){
         setFormdata({...formdata, [e.target.name]: e.target.value});
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const token = cookies.get('token');
         if(!token){
@@ -28,36 +28,33 @@ function AddCategory(){
         }
 
         try {
-            fetch(`${backendUrl}/api/places/addCategory`, {
+            const res = await fetch(`${backendUrl}/api/places/addCategory`, {
                 method: "POST",
                 headers: {
                     'Content-type': 'application/json',
-                    'Authorization': token
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(formdata)
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                if(data.message){
-                    toast.error("Error in adding the category",{
-                        autoClose: 1000,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        theme: 'colored'
-                    })
-                }
-                else{
-                    toast.success("Category added successfully",{
-                        onClose: () => {
-                            window.location.href = '/addCategory'
-                        },
-                        autoClose: 1000,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        theme: 'colored'
-                    })
-                }
-            })
+            });
+            if(res.ok){
+                toast.success("Category added successfully",{
+                    onClose: () => {
+                        window.location.href = '/addCategory'
+                    },
+                    autoClose: 1000,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    theme: 'colored'
+                });
+            }
+            else{
+                toast.error("Error in adding the category",{
+                    autoClose: 1000,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    theme: 'colored'
+                })
+            }
         } catch (error) {
             toast.error("Server Error",{
                 autoClose: 1000,
@@ -73,7 +70,7 @@ function AddCategory(){
       <div className="sm:p-10 p-4">
         <a href="/profile" className="px-4 py-1 rounded-lg bg-slate-600 text-white">Back</a>
         <h1 className="text-3xl text-white mb-10 mt-2">Add new Category</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 lg:w-1/2 text-white">
+        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-4 lg:w-1/2 text-white">
           <input name="title1" value={formdata.title1} onChange={handleChange} placeholder="Define Category" required className="p-2 rounded bg-transparent border-2 border-zinc-600 outline-none" />
           <input name="description" value={formdata.description} onChange={handleChange} placeholder="Brief Description of Category" required className="p-2 rounded bg-transparent border-2 border-zinc-600 outline-none" />
           <input name="img1" value={formdata.img1} onChange={handleChange} placeholder="Image URL" required className="p-2 rounded bg-transparent border-2 border-zinc-600 outline-none" />

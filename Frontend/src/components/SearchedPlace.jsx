@@ -171,7 +171,7 @@ function SearchedPlace() {
         <div>
             <Header/>
 
-            <div className="min-h-screen bg-zinc-700 sm:p-10 lg:pt-32 sm:pt-28 pt-20">
+            <div className="min-h-screen bg-gray-800 sm:p-10 lg:pt-32 sm:pt-28 pt-20">
                 {/* For Search bar */}
                 <div className="px-10 py-5 text-white">
                     <div className="relative flex flex-col items-center">
@@ -225,7 +225,7 @@ function SearchedPlace() {
                 {/* For displaying Place */}
                 {place ? (
                 <div className="lg:w-4/5 mx-auto min-h-screen flex flex-col sm:gap-16 gap-8">
-                    <div className="p-8 bg-gradient-to-tr from-zinc-400 to-zinc-300 rounded-lg shadow-lg">
+                    <div className="p-8 bg-gray-800 text-white rounded-lg shadow-lg">
                         <section className="flex flex-col justify-center items-center">
                             <h2 className="text-2xl text-center font-semibold">{place.title1}</h2>
                             <p className="text-lg text-center mb-6">{place.title2}</p>

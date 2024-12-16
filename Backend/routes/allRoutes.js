@@ -135,13 +135,14 @@ router.post('/addCategory', auth, async (req, res) => {
         title1,
         description,
         img1
-    })
+    });
 
     try {
-        const savedCategory = await newCategory.save();
-        res.json(savedCategory);
+        await newCategory.save();
+        res.status(200).json();
     } catch (error) {
-        res.json({message: error.message});
+        console.error("Error occured : ", error);
+        res.status(500).json();
     }
 })
 
@@ -153,7 +154,7 @@ router.post('/addPlace/:userID', async (req, res) => {
     const foundUser = await user.findById(userID);
 
     // Place added by Admin
-    if(foundUser.email === "rj@gmail.com"){
+    if(foundUser.email === process.env.ADMIN_EMAIL){
         const newPlace = new place({
             title1, title2, img1, content, category
         });

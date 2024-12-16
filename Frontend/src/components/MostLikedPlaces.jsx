@@ -154,12 +154,12 @@ function MostLikedPlaces(){
     return(
         <>
         <Header1/>
-        <div className="sm:p-10 sm:pt-28 pt-24 bg-zinc-500">
+        <div className="sm:p-10 sm:pt-28 pt-24 bg-gray-800">
             <h1 className="sm:text-2xl sm:py-2 text-lg text-gray-300 text-center font-bold mb-4">Top 10 Liked Places</h1>
             <div className="lg:w-4/5 mx-auto min-h-screen flex flex-col sm:gap-16 gap-8">
             {likedPlaces.length > 0 ? (
                 likedPlaces.map((p) => (
-                    <div key={p._id} className="p-8 bg-gradient-to-tr from-zinc-400 to-zinc-300 rounded-lg shadow-lg">
+                    <div key={p._id} className="p-8 bg-gray-800 text-white rounded-lg shadow-lg">
                         <section className="flex flex-col justify-center items-center">
                             <h2 className="text-2xl text-center font-semibold">{p.title1}</h2>
                             <p className="text-lg text-center mb-6">{p.title2}</p>
@@ -222,7 +222,7 @@ function MostLikedPlaces(){
                         </div>
                     </div>
                 ))
-            ) : (<div className="p-4 text-xl font-semibold text-center">No place available</div>)}
+            ) : (<div className="p-4 text-xl font-semibold text-center text-white">No place available</div>)}
             </div>
         </div>
         <ToastContainer/>
