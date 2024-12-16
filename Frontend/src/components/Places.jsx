@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 import Footer from "./Footer";
+import Header from "./Header";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { SlBubble, SlLike, SlBag, SlClose } from "react-icons/sl";
-import Header from "./Header";
+import { SlBubble, SlClose } from "react-icons/sl";
+import { BiSolidLike } from "react-icons/bi";
+import { AiOutlineLike } from "react-icons/ai";
+import { FaRegSave, FaSave } from "react-icons/fa";
 
 const cookies = new Cookies();
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -73,6 +76,7 @@ function Places() {
                     body: JSON.stringify({ userID: user._id })
                 });
                 if (response.ok) {
+                    setIsLike(!isLike);
                     const updatedPlace = await response.json();
                     setPlaces(places.map((p) => p._id === placeID ? updatedPlace : p));
                 } else {
@@ -99,6 +103,7 @@ function Places() {
                     body: JSON.stringify({ userID: user._id })
                 });
                 if (res.ok) {
+                    setIsSave(!isSave);
                     const data = await res.json();
                     toast.success(data.message, { autoClose: 1500, position: 'bottom-left', theme: 'colored' });
                 } else {
@@ -153,6 +158,10 @@ function Places() {
         showContent === true ? setButtonValue("Read More") : setButtonValue("Read Less");
     }
 
+    // For updation of buttons
+    const [isLike, setIsLike] = useState(false);
+    const [isSave, setIsSave] = useState(false);
+
     return (
         <>
             <Header />
@@ -190,11 +199,11 @@ function Places() {
                                 
                                 <ul className="flex gap-6 mt-6">
                                     <li onClick={() => handleLike(p._id)} className="cursor-pointer">
-                                        <SlLike className="lg:text-xl" />
+                                        {isLike == false ? <AiOutlineLike className="lg:text-xl" /> : <BiSolidLike className="lg:text-xl" />}
                                         <p>{p.likes?.length || 0}</p>
                                     </li>
                                     <li onClick={() => handleSave(p._id)} className="cursor-pointer">
-                                        <SlBag className="lg:text-xl" />
+                                        {isSave == false ? <FaRegSave className="lg:text-xl" /> : <FaSave className="lg:text-xl" />}
                                     </li>
                                     <li onClick={() => handleComment(p._id)} className="cursor-pointer">
                                         <SlBubble className="lg:text-xl" />
@@ -223,7 +232,7 @@ function Places() {
                                 </div>
                             </div>
                         ))
-                    ) : (<div className="p-4 text-xl font-semibold text-center">No place available</div>)}
+                    ) : (<div className="p-4 text-xl font-semibold text-center text-white">No place available</div>)}
                     <ToastContainer />
                 </div>
             </div>

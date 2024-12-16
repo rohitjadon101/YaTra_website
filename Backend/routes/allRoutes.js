@@ -215,7 +215,7 @@ router.post('/:id/like', auth, async (req, res) => {
 });
 
 // Save Place Functionality
-router.post('/:id/save', auth, async (req, res) => {
+router.post('/:id/save', async (req, res) => {
     const placeID = req.params.id;
     const {userID} = req.body;
 
@@ -230,7 +230,7 @@ router.post('/:id/save', auth, async (req, res) => {
         else{
             newUser.savedPlaces = newUser.savedPlaces.filter(id => id.toString() !== placeID);
             await newUser.save();
-            res.status(200).json({message: "place removed successfully"});
+            res.status(200).json({message: "place unsaved"});
         }
     } catch (error) {
         res.status(500).json({message : "server error : ", error});
