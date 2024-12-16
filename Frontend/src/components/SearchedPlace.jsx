@@ -173,7 +173,7 @@ function SearchedPlace() {
 
             <div className="min-h-screen bg-gray-800 sm:p-10 lg:pt-32 sm:pt-28 pt-20">
                 {/* For Search bar */}
-                <div className="px-10 py-5 text-white">
+                <div className="px-10 py-5 text-white border-b-[1px] border-gray-700">
                     <div className="relative flex flex-col items-center">
                         <div> 
                             <div className="inline-block mr-5">
